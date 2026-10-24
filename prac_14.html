@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Quiz Application</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            background-color: #eff6ff;
+        }
+
+        .quiz-box {
+            transition: 0.3s;
+        }
+
+        button {
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+
+<body class="flex justify-center items-center min-h-screen">
+
+    <!-- Quiz Box -->
+    <div class="quiz-box bg-white p-6 rounded-xl shadow-lg w-96">
+
+        <h1 class="text-2xl font-bold text-center text-blue-800 mb-4">
+            Simple Quiz
+        </h1>
+
+        <p id="questionNumber" class="text-gray-500 mb-2">
+            Question 1
+        </p>
+
+        <h2 id="question" class="text-lg font-bold mb-4">
+            Question will appear here
+        </h2>
+
+        <!-- Answer Options -->
+        <div id="options" class="space-y-3"></div>
+
+        <p id="message" class="mt-4 font-bold"></p>
+
+        <button id="nextBtn"
+            onclick="nextQuestion()"
+            class="bg-blue-600 text-white p-2 rounded w-full mt-4">
+            Next Question
+        </button>
+
+        <p id="score" class="text-center mt-4 text-gray-600"></p>
+
+    </div>
+
+    <script>
+        // Quiz questions and answers
+        let questions = [
+            {
+                question: "Which language is used to create a webpage structure?",
+                options: ["CSS", "HTML", "Java", "Python"],
+                answer: "HTML"
+            },
+            {
+                question: "Which language is used to style a webpage?",
+                options: ["HTML", "C", "CSS", "SQL"],
+                answer: "CSS"
+            },
+            {
+                question: "Which language makes a webpage interactive?",
+                options: ["JavaScript", "HTML", "CSS", "MySQL"],
+                answer: "JavaScript"
+            },
+            {
+                question: "Which tag is used to display an image in HTML?",
+                options: ["<image>", "<pic>", "<img>", "<src>"],
+                answer: "<img>"
+            },
+            {
+                question: "Which tag is used to create a hyperlink?",
+                options: ["<p>", "<h1>", "<a>", "<br>"],
+                answer: "<a>"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        // Display the current question
+        function showQuestion() {
+            answered = false;
+
+            document.getElementById("message").innerText = "";
+
+            document.getElementById("questionNumber").innerText =
+                "Question " + (currentQuestion + 1) + " of " + questions.length;
+
+            // Use innerText so HTML tags display as text
+            document.getElementById("question").innerText =
+                questions[currentQuestion].question;
+
+            document.getElementById("score").innerText = "";
+
+            let options = document.getElementById("options");
+            options.innerHTML = "";
+
+            // Display all answer options
+            for (let i = 0; i < questions[currentQuestion].options.length; i++) {
+                let btn = document.createElement("button");
+
+                // Display options as text, not HTML
+                btn.innerText = questions[currentQuestion].options[i];
+
+                btn.className =
+                    "bg-blue-100 hover:bg-blue-200 p-2 rounded w-full";
+
+                btn.onclick = function () {
+                    checkAnswer(btn.innerText, btn);
+                };
+
+                options.appendChild(btn);
+            }
+
+            if (currentQuestion == questions.length - 1) {
+                document.getElementById("nextBtn").innerText = "Show Result";
+            } else {
+                document.getElementById("nextBtn").innerText = "Next Question";
+            }
+        }
+
+        // Check the selected answer
+        function checkAnswer(selectedAnswer, btn) {
+            if (answered == true) {
+                return;
+            }
+
+            answered = true;
+
+            if (selectedAnswer == questions[currentQuestion].answer) {
+                score++;
+
+                document.getElementById("message").innerText =
+                    "Correct answer!";
+
+                document.getElementById("message").style.color = "green";
+                btn.style.backgroundColor = "#86efac";
+            } else {
+                document.getElementById("message").innerText =
+                    "Wrong answer!";
+
+                document.getElementById("message").style.color = "red";
+                btn.style.backgroundColor = "#fca5a5";
+            }
+
+            document.getElementById("score").innerText =
+                "Your Score: " + score;
+        }
+
+        // Move to the next question or show the result
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        // Display the final result
+        function showResult() {
+            document.getElementById("questionNumber").innerText =
+                "Quiz Completed!";
+
+            document.getElementById("question").innerText =
+                "Your Final Score: " + score + " / " + questions.length;
+
+            document.getElementById("options").innerHTML = "";
+
+            document.getElementById("message").innerText =
+                "Great job! Keep learning.";
+
+            document.getElementById("message").style.color = "green";
+
+            document.getElementById("score").innerText =
+                "You scored " +
+                Math.round((score / questions.length) * 100) + "%";
+
+            document.getElementById("nextBtn").innerText = "Play Again";
+            document.getElementById("nextBtn").onclick = restartQuiz;
+        }
+
+        // Restart the quiz
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+
+            document.getElementById("nextBtn").onclick = nextQuestion;
+
+            showQuestion();
+        }
+
+        // Start the quiz
+        showQuestion();
+    </script>
+
+</body>
+</html>
