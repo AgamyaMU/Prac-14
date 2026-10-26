@@ -1,8 +1,7 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Simple Quiz Application</title>
+    <title>Quiz Application</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -27,11 +26,10 @@
 
 <body class="flex justify-center items-center min-h-screen">
 
-    <!-- Quiz Box -->
     <div class="quiz-box bg-white p-6 rounded-xl shadow-lg w-96">
 
         <h1 class="text-2xl font-bold text-center text-blue-800 mb-4">
-            Simple Quiz
+            😂 Funny Quiz
         </h1>
 
         <p id="questionNumber" class="text-gray-500 mb-2">
@@ -42,14 +40,14 @@
             Question will appear here
         </h2>
 
-        <!-- Answer Options -->
+
         <div id="options" class="space-y-3"></div>
 
         <p id="message" class="mt-4 font-bold"></p>
 
         <button id="nextBtn"
             onclick="nextQuestion()"
-            class="bg-blue-600 text-white p-2 rounded w-full mt-4">
+            class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded w-full mt-4">
             Next Question
         </button>
 
@@ -58,32 +56,57 @@
     </div>
 
     <script>
-        // Quiz questions and answers
+
         let questions = [
             {
-                question: "Which language is used to create a webpage structure?",
-                options: ["CSS", "HTML", "Java", "Python"],
-                answer: "HTML"
+                question: "1. You made a website, but it looks like a plain school notebook. Which language will make it look attractive?",
+                options: [
+                    "HTML, the skeleton",
+                    "CSS, the designer",
+                    "Java, the coffee lover",
+                    "SQL, the database guy"
+                ],
+                answer: "CSS, the designer"
             },
             {
-                question: "Which language is used to style a webpage?",
-                options: ["HTML", "C", "CSS", "SQL"],
-                answer: "CSS"
-            },
-            {
-                question: "Which language makes a webpage interactive?",
-                options: ["JavaScript", "HTML", "CSS", "MySQL"],
+                question: "2. You click a button, but your website acts like it didn't hear you. Who can make it respond?",
+                options: [
+                    "HTML",
+                    "CSS",
+                    "JavaScript",
+                    "My calculator"
+                ],
                 answer: "JavaScript"
             },
             {
-                question: "Which tag is used to display an image in HTML?",
-                options: ["<image>", "<pic>", "<img>", "<src>"],
+                question: "3. You want to show your friend's embarrassing photo on your webpage. Which HTML tag do you need?",
+                options: [
+                    "<picture-me>",
+                    "<photo>",
+                    "<img>",
+                    "<show-friend>"
+                ],
                 answer: "<img>"
             },
             {
-                question: "Which tag is used to create a hyperlink?",
-                options: ["<p>", "<h1>", "<a>", "<br>"],
+                question: "4. Your friend clicks a link and ends up on another webpage. Which tag made that possible?",
+                options: [
+                    "<p>",
+                    "<a>",
+                    "<h1>",
+                    "<br>"
+                ],
                 answer: "<a>"
+            },
+            {
+                question: "5. Your website needs a heading saying 'I AM THE BOSS!' Which HTML tag is best for the main heading?",
+                options: [
+                    "<h1>",
+                    "<small>",
+                    "<footer>",
+                    "<br>"
+                ],
+                answer: "<h1>"
             }
         ];
 
@@ -96,15 +119,14 @@
             answered = false;
 
             document.getElementById("message").innerText = "";
+            document.getElementById("score").innerText = "";
 
             document.getElementById("questionNumber").innerText =
-                "Question " + (currentQuestion + 1) + " of " + questions.length;
+                "Question " + (currentQuestion + 1) +
+                " of " + questions.length;
 
-            // Use innerText so HTML tags display as text
             document.getElementById("question").innerText =
                 questions[currentQuestion].question;
-
-            document.getElementById("score").innerText = "";
 
             let options = document.getElementById("options");
             options.innerHTML = "";
@@ -113,12 +135,13 @@
             for (let i = 0; i < questions[currentQuestion].options.length; i++) {
                 let btn = document.createElement("button");
 
-                // Display options as text, not HTML
+                // Show the option as text
                 btn.innerText = questions[currentQuestion].options[i];
 
                 btn.className =
                     "bg-blue-100 hover:bg-blue-200 p-2 rounded w-full";
 
+                // Check the selected answer
                 btn.onclick = function () {
                     checkAnswer(btn.innerText, btn);
                 };
@@ -126,6 +149,7 @@
                 options.appendChild(btn);
             }
 
+            // Change the button text on the last question
             if (currentQuestion == questions.length - 1) {
                 document.getElementById("nextBtn").innerText = "Show Result";
             } else {
@@ -133,7 +157,7 @@
             }
         }
 
-        // Check the selected answer
+        // Check whether the answer is correct
         function checkAnswer(selectedAnswer, btn) {
             if (answered == true) {
                 return;
@@ -145,15 +169,17 @@
                 score++;
 
                 document.getElementById("message").innerText =
-                    "Correct answer!";
+                    "Correct! Your brain is working overtime! 🎉";
 
                 document.getElementById("message").style.color = "green";
+
                 btn.style.backgroundColor = "#86efac";
             } else {
                 document.getElementById("message").innerText =
-                    "Wrong answer!";
+                    "Oops! Even Google couldn't save that answer! 😂";
 
                 document.getElementById("message").style.color = "red";
+
                 btn.style.backgroundColor = "#fca5a5";
             }
 
@@ -161,8 +187,17 @@
                 "Your Score: " + score;
         }
 
-        // Move to the next question or show the result
+        // Move to the next question
         function nextQuestion() {
+            // Do not continue until an answer is selected
+            if (answered == false) {
+                document.getElementById("message").innerText =
+                    "Choose an answer first! Don't run away! 😂";
+
+                document.getElementById("message").style.color = "orange";
+                return;
+            }
+
             if (currentQuestion < questions.length - 1) {
                 currentQuestion++;
                 showQuestion();
@@ -174,16 +209,27 @@
         // Display the final result
         function showResult() {
             document.getElementById("questionNumber").innerText =
-                "Quiz Completed!";
+                "Quiz Completed! 🏆";
 
             document.getElementById("question").innerText =
                 "Your Final Score: " + score + " / " + questions.length;
 
             document.getElementById("options").innerHTML = "";
 
-            document.getElementById("message").innerText =
-                "Great job! Keep learning.";
+            let resultMessage = "";
 
+            if (score == 5) {
+                resultMessage =
+                    "Coding legend! Even bugs are scared of you! 👑";
+            } else if (score >= 3) {
+                resultMessage =
+                    "Not bad! Your keyboard believes in you! 😎";
+            } else {
+                resultMessage =
+                    "Keep practising! Every coding expert starts somewhere! 🐣";
+            }
+
+            document.getElementById("message").innerText = resultMessage;
             document.getElementById("message").style.color = "green";
 
             document.getElementById("score").innerText =
@@ -191,13 +237,16 @@
                 Math.round((score / questions.length) * 100) + "%";
 
             document.getElementById("nextBtn").innerText = "Play Again";
+
+            // Change the button action to restart the quiz
             document.getElementById("nextBtn").onclick = restartQuiz;
         }
 
-        // Restart the quiz
+        // Restart the quiz from the beginning
         function restartQuiz() {
             currentQuestion = 0;
             score = 0;
+            answered = false;
 
             document.getElementById("nextBtn").onclick = nextQuestion;
 
